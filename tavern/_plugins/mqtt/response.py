@@ -181,11 +181,14 @@ class MQTTResponse(BaseResponse):
 
             self._maybe_run_validate_functions(msg)
         else:
-            self._adderr(
-                "Expected '%s' on topic '%s' but no such message received",
-                expected_payload,
-                topic,
-            )
+            if self.expected.get("unexpected"):
+                return {}
+            else:
+                self._adderr(
+                    "Expected '%s' on topic '%s' but no such message received",
+                    expected_payload,
+                    topic,
+                )
 
         if self.errors:
             if warnings:
